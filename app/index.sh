@@ -1,8 +1,14 @@
 #!/bin/bash
-echo "This script include commands to run mapreduce jobs using hadoop streaming to index documents"
+set -e
 
-echo "Input path is :"
-echo $1
+INPUT_PATH="${1:-/input/data}"
 
+echo "=== Full indexing pipeline ==="
 
-hdfs dfs -ls /
+echo "Step 1: Creating index with MapReduce..."
+bash create_index.sh "$INPUT_PATH"
+
+echo "Step 2: Storing index in Cassandra..."
+bash store_index.sh
+
+echo "=== Full indexing pipeline completed ==="
